@@ -87,7 +87,12 @@ RegisterNetEvent('kora_fuel:server:purchase', function(netId, account, quantity,
 
         info, reason = validate(src, netId, account, quantity, currentLevel, site)
         if not info then return sendResult(src, false, reason, atCharger) end
-        Kora.print.debug(netId, account, quantity, currentLevel, info)
+        if Kora.logging.isEnabled('debug') then
+            Kora.logging.debug('purchase.validated', 'Fuel purchase validated', {
+                netId = netId, account = account, quantity = quantity, currentLevel = currentLevel,
+                kind = info.kind, site = info.site, price = info.price, electric = info.electric,
+            })
+        end
         -- A free total (price 0, or rounded down to 0) has nothing to take:
         -- kora_core refuses a zero removal, which would fail the service.
         if info.price > 0 then
@@ -104,7 +109,7 @@ RegisterNetEvent('kora_fuel:server:purchase', function(netId, account, quantity,
 
     busy[src] = nil
     if not ok then
-        print(('[kora_fuel] purchase error for %s: %s'):format(src, tostring(err)))
+        Kora.logging.error('purchase.failed', 'Fuel purchase errored', { playerId = src, error = tostring(err) })
         sendResult(src, false, Kora.lang('error.payment_failed'), site == 'charger')
     end
 end)

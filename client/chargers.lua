@@ -44,7 +44,7 @@ local function spawnProp(site, prop)
         })
         site.spawning = false
         if not entity then
-            print(('[kora_fuel] charger prop %s at %s was not spawned: %s'):format(prop.model, site.label, tostring(err)))
+            Kora.logging.warn('chargers.prop_not_spawned', 'Charger prop was not spawned', { model = tostring(prop.model), site = tostring(site.label), error = tostring(err) })
             return
         end
         site.entity = entity

@@ -69,7 +69,7 @@ function Fuel.normalizeChargingStations(stations)
         else
             local label = type(station) == 'table' and type(station.label) == 'string' and station.label ~= ''
                 and ('%q'):format(station.label) or 'without a label'
-            print(('^3[kora_fuel] Skipping EV charging station #%d %s: %s %s.^7'):format(index, label, field, reason))
+            Kora.logging.warn('stations.charging_station_skipped', 'Skipping invalid EV charging station', { index = index, label = label, field = field, reason = reason })
         end
     end
     return out
